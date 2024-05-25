@@ -1,4 +1,4 @@
-package io.petstore.pet;
+package io;
 
 import com.github.javafaker.Faker;
 import io.petstore.dto.rs.RSCodeTypeMessageDTO;
