@@ -22,7 +22,7 @@
         <junit.jupiter.api.version>5.10.2</junit.jupiter.api.version>
         <assertj.core.version>3.25.3</assertj.core.version>
         <javafaker.version>1.0.2</javafaker.version>
-        <lombok.version>1.18.12</lombok.version>
+        <lombok.version>1.18.32</lombok.version>
         <rest.assured.version>5.4.0</rest.assured.version>
         <json.schema.validator.version>5.4.0</json.schema.validator.version>
         <jackson.mapper.asl>1.9.13</jackson.mapper.asl>
@@ -82,7 +82,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <base.api.url>https://reqres.in/api</base.api.url>
+                <base.api.url>https://petstore.swagger.io/v2</base.api.url>
             </properties>
         </profile>
     </profiles>
