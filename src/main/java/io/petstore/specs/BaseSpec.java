@@ -18,6 +18,7 @@ public class BaseSpec {
                 .setPort(port)
                 .setBasePath(basePath)
                 .setContentType(ContentType.JSON)
+                .setAccept(ContentType.JSON)
                 .log(LogDetail.ALL)
                 .build();
     }

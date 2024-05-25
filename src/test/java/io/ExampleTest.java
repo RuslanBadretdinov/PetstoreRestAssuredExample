@@ -1,7 +1,7 @@
 package io;
 
 import com.github.javafaker.Faker;
-import io.petstore.dto.rs.RSCodeTypeMessageDTO;
+import io.petstore.dto.rp.RPCodeTypeMessageDTO;
 import io.petstore.services.pet.PetServiceApi;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.Assertions;
@@ -21,21 +21,21 @@ public class ExampleTest {
     @Tag("@test1")
     public void test1() {
         // Проверка полей №1
-        ValidatableResponse petRs = petServiceApi.postPetViaForm(5, faker.name().firstName(), "sold");
+        ValidatableResponse petRs = petServiceApi.postPetViaForm(5L, faker.name().firstName(), "sold");
 
         petRs.statusCode(200);
 
         petRs
-                .body("code", equalTo(200))
+                .body("code", equalTo(200L))
                 .body("type", equalTo("unknown"))
-                .body("message", equalTo(Integer.toString(5)));
+                .body("message", equalTo(Long.toString(5L)));
     }
 
     @Test
     @Tag("@test2")
     public void test2() {
         // Проверка полей с помощью JsonPath
-        ValidatableResponse petRs = petServiceApi.postPetViaForm(5, faker.name().firstName(), "sold");
+        ValidatableResponse petRs = petServiceApi.postPetViaForm(5L, faker.name().firstName(), "sold");
 
         petRs.statusCode(200);
 
@@ -45,7 +45,7 @@ public class ExampleTest {
         Assertions.assertEquals(expectedCode, actualCode, "Code is incorrect");
 
         // Чтобы вытащить лист элементов:
-        List<Integer> actualCodeList = petRs.extract().body().jsonPath().getList("code");
+        List<Long> actualCodeList = petRs.extract().body().jsonPath().getList("code");
 
 //        // Пример JsonPath без extract
 //        petRs.body("store.book.category", equalTo(200));
@@ -55,16 +55,16 @@ public class ExampleTest {
     @Tag("@test3")
     public void test3() {
         // Проверка полей body с помощью dto объекта
-        ValidatableResponse petRs = petServiceApi.postPetViaForm(5, faker.name().firstName(), "sold");
+        ValidatableResponse petRs = petServiceApi.postPetViaForm(5L, faker.name().firstName(), "sold");
 
         petRs.statusCode(200);
 
-        RSCodeTypeMessageDTO rsCodeTypeMessageDTO = petRs.extract().body().as(RSCodeTypeMessageDTO.class);
+        RPCodeTypeMessageDTO rPCodeTypeMessageDTO = petRs.extract().body().as(RPCodeTypeMessageDTO.class);
 
         Assertions.assertAll("rsCodeTypeMessageDTO",
-                () -> Assertions.assertEquals(200L, rsCodeTypeMessageDTO.getCode()),
-                () -> Assertions.assertEquals("unknown", rsCodeTypeMessageDTO.getType()),
-                () -> Assertions.assertEquals(Integer.toString(5), rsCodeTypeMessageDTO.getMessage())
+                () -> Assertions.assertEquals(200L, rPCodeTypeMessageDTO.getCode()),
+                () -> Assertions.assertEquals("unknown", rPCodeTypeMessageDTO.getType()),
+                () -> Assertions.assertEquals(Long.toString(5L), rPCodeTypeMessageDTO.getMessage())
         );
     }
 
@@ -72,17 +72,17 @@ public class ExampleTest {
     @Tag("@test4")
     public void test4() {
         // Валидация JSON схемы
-        ValidatableResponse petRs = petServiceApi.postPetViaForm(5, faker.name().firstName(), "sold");
+        ValidatableResponse petRs = petServiceApi.postPetViaForm(5L, faker.name().firstName(), "sold");
 
         petRs.statusCode(200);
         petRs.body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
 
-        RSCodeTypeMessageDTO rsCodeTypeMessageDTO = petRs.extract().body().as(RSCodeTypeMessageDTO.class);
+        RPCodeTypeMessageDTO rPCodeTypeMessageDTO = petRs.extract().body().as(RPCodeTypeMessageDTO.class);
 
-        Assertions.assertAll("rsCodeTypeMessageDTO",
-                () -> Assertions.assertEquals(200L, rsCodeTypeMessageDTO.getCode()),
-                () -> Assertions.assertEquals("unknown", rsCodeTypeMessageDTO.getType()),
-                () -> Assertions.assertEquals(Integer.toString(5), rsCodeTypeMessageDTO.getMessage())
+        Assertions.assertAll("rpCodeTypeMessageDTO",
+                () -> Assertions.assertEquals(200L, rPCodeTypeMessageDTO.getCode()),
+                () -> Assertions.assertEquals("unknown", rPCodeTypeMessageDTO.getType()),
+                () -> Assertions.assertEquals(Long.toString(5L), rPCodeTypeMessageDTO.getMessage())
         );
     }
 }

@@ -3,12 +3,14 @@ package io.petstore.dto.inner_parts;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Tag {
+@EqualsAndHashCode
+public class TagDTO {
     private Long id;
     private String name;
 }

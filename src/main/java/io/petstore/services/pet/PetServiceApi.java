@@ -1,6 +1,8 @@
 package io.petstore.services.pet;
 
+import io.petstore.dto.pet.PetDTO;
 import io.petstore.services.BaseServiceApiAbstract;
+import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 
 import static io.restassured.RestAssured.given;
@@ -13,7 +15,7 @@ public class PetServiceApi extends BaseServiceApiAbstract {
         spec(BASE_API_URL, BASE_PATH);
     }
 
-    public ValidatableResponse getPet(int id) {
+    public ValidatableResponse getPet(long id) {
         return given()
                 .basePath(this.BASE_PATH + "/" + id)
                 .log().all()
@@ -23,7 +25,27 @@ public class PetServiceApi extends BaseServiceApiAbstract {
                 .log().all();
     }
 
-    public ValidatableResponse postPetViaForm(int id, String name, String status) {
+    public ValidatableResponse postPet(PetDTO petDTO) {
+        return given()
+                .body(petDTO)
+                .log().all()
+                .when()
+                .post()
+                .then()
+                .log().all();
+    }
+
+    public ValidatableResponse putPet(PetDTO petDTO) {
+        return given()
+                .body(petDTO)
+                .log().all()
+                .when()
+                .put()
+                .then()
+                .log().all();
+    }
+
+    public ValidatableResponse postPetViaForm(long id, String name, String status) {
         return given()
                 .basePath(this.BASE_PATH + "/" + id)
                 .contentType("application/x-www-form-urlencoded; charset=utf-8")
@@ -38,7 +60,7 @@ public class PetServiceApi extends BaseServiceApiAbstract {
                 .log().all();
     }
 
-    public ValidatableResponse deletePet(int id) {
+    public ValidatableResponse deletePet(long id) {
         return given()
                 .basePath(this.BASE_PATH + "/" + id)
                 .log().all()
