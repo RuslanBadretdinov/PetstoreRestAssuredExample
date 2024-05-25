@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +30,9 @@ public class PetTest {
     public void postPet200() {
         PetDTO rqPetDTO = createNewPet(2L);
         ValidatableResponse rs = petServiceApi.postPet(rqPetDTO);
-        rs.statusCode(200);
+        rs.statusCode(200)
+                // Добавил enum в json схему для проверки допустимых значений
+                .body(matchesJsonSchemaInClasspath("schema/rs/PetDTOSchema.json"));
     }
 
     @Test
@@ -61,7 +64,7 @@ public class PetTest {
         ValidatableResponse rsGet = petServiceApi.getPet(id);
         rsGet.statusCode(200);
         PetDTO rpGetPetDTO = rsGet.extract().body().as(PetDTO.class);
-        comparePetDTO(rpGetPetDTO, rqPostPetDTO, "rpGetPetDTO01","rqPostPetDTO");
+        comparePetDTO(rpGetPetDTO, rqPostPetDTO, "rpGetPetDTO01", "rqPostPetDTO");
 
         // Step 1 - PUT+GET - сравнение DTO объекта rqPutPetDTO с rpGetPetDTO + проверка того, что сгенерировался отличный объект от POST запроса
         PetDTO rqPutPetDTO = createNewPet(id);
@@ -72,11 +75,12 @@ public class PetTest {
         rsGet = petServiceApi.getPet(id);
         rsGet.statusCode(200);
         rpGetPetDTO = rsGet.extract().body().as(PetDTO.class);
-        comparePetDTO(rpGetPetDTO, rqPutPetDTO, "rpGetPetDTO02","rqPutPetDTO");
+        comparePetDTO(rpGetPetDTO, rqPutPetDTO, "rpGetPetDTO02", "rqPutPetDTO");
 
         // Step 3 - DELETE+GET - проверка удаления DTO
         ValidatableResponse rsDelete = petServiceApi.deletePet(id);
-        rsDelete.statusCode(200);
+        rsDelete.statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
         RPCodeTypeMessageDTO rpDeleteBody = rsDelete.extract().body().as(RPCodeTypeMessageDTO.class);
         Assertions.assertAll("rsCodeTypeMessageDTO",
                 () -> assertEquals(200L, rpDeleteBody.getCode()),
@@ -85,7 +89,8 @@ public class PetTest {
         );
 
         rsGet = petServiceApi.getPet(id);
-        rsGet.statusCode(404);
+        rsGet.statusCode(404)
+                .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
         RPCodeTypeMessageDTO rpGetErrorBody = rsGet.extract().body().as(RPCodeTypeMessageDTO.class);
         Assertions.assertAll("rsCodeTypeMessageDTO",
                 () -> assertEquals(1, rpGetErrorBody.getCode()),
