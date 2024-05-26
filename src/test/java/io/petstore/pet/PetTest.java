@@ -19,7 +19,7 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@Tag("@homework3")
 public class PetTest {
     private Faker faker = new Faker();
     private PetServiceApi petServiceApi = new PetServiceApi();
@@ -30,7 +30,7 @@ public class PetTest {
     @Tag("@method01test01")
     public void postPet200() {
         /*
-            Создаём объект Pet (POST /pet/{id}),
+            Создаём объект Pet (POST /pet + 'body'),
             Проверяем status 200
             Проверяем валидацию по JSON схеме
         */
@@ -49,7 +49,7 @@ public class PetTest {
     @Tag("@method01test02")
     public void postPetCompareRqBodyAndRsBody() {
         /*
-            Создаём объект Pet (POST /pet/{id}),
+            Создаём объект Pet (POST /pet + 'body'),
             Проверяем status 200
             Сверяем объект из запроса с объектом из ответа (equals - у PetDTO.class переопределён)
         */
@@ -131,7 +131,7 @@ public class PetTest {
     @Tag("@method02test01")
     public void postUploadImage() {
         /*
-            Создаём объект Pet (POST /pet/{id}),
+            Создаём объект Pet (POST /pet + 'body'),
             Отправляем изображение (POST /pet/{id}/uploadImage),
             Проверяем ответ от (POST /pet/{id}/uploadImage)
         */
@@ -166,7 +166,7 @@ public class PetTest {
         // Проверка необязательности поля 'additionalMetadata'
 
         /*
-            Создаём объект Pet (POST /pet/{id}),
+            Создаём объект Pet (POST /pet + 'body'),
             Отправляем изображение (POST /pet/{id}/uploadImage) через перегруженный метод без поля 'additionalMetadata',
             Проверяем ответ от (POST /pet/{id}/uploadImage)
         */
@@ -201,7 +201,7 @@ public class PetTest {
         // Проверка необязательности поля 'additionalMetadata'
 
         /*
-            Создаём объект Pet (POST /pet/{id}),
+            Создаём объект Pet (POST /pet + 'body'),
             Отправляем текстовый файл вместо изображения (POST /pet/{id}/uploadImage),
             Проверяем ответ от (POST /pet/{id}/uploadImage)
         */
@@ -237,7 +237,7 @@ public class PetTest {
         // Проверка необязательности поля 'additionalMetadata'
 
         /*
-            Создаём объект Pet (POST /pet/{id}),
+            Создаём объект Pet (POST /pet + 'body'),
             Удаляем объект Pet (DELETE /pet/{id})
             Отправляем изображение (POST /pet/{id}/uploadImage),
             Проверяем ответ от (POST /pet/{id}/uploadImage)
