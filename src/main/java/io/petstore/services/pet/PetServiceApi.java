@@ -2,8 +2,9 @@ package io.petstore.services.pet;
 
 import io.petstore.dto.pet.PetDTO;
 import io.petstore.services.BaseServiceApiAbstract;
-import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+
+import java.io.File;
 
 import static io.restassured.RestAssured.given;
 
@@ -66,6 +67,21 @@ public class PetServiceApi extends BaseServiceApiAbstract {
                 .log().all()
                 .when()
                 .delete()
+                .then()
+                .log().all();
+    }
+
+    public ValidatableResponse postUploadImage(long id, String additionalMetadata, String filePath) {
+        return given()
+                .basePath(this.BASE_PATH + "/" + id + "/uploadImage")
+                .contentType("multipart/form-data; boundary=----webkitformboundary2fvqbgcbynvtvptx; charset=utf-8")
+                .formParam("additionalMetadata", additionalMetadata)
+                .formParam("file", new File(filePath))
+                .header("Accept-Charset", "UTF-8")
+                .header("Accept-Encoding", "gzip, deflate, br")
+                .log().all()
+                .when()
+                .post()
                 .then()
                 .log().all();
     }

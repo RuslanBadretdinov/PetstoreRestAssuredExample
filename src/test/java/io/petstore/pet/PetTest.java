@@ -47,9 +47,6 @@ public class PetTest {
         assertTrue(rqPetDTO.equals(rpPetDTO), "rqPetDTO is not equal to rpPetDTO");
     }
 
-    /*
-
-     */
     @Test
     @DisplayName("Проверка запросов POST, PUT, GET, DELETE + '/pet' и их body")
     @Tag("@method01")
@@ -98,6 +95,16 @@ public class PetTest {
                 () -> assertEquals("Pet not found", rpGetErrorBody.getMessage())
         );
 
+    }
+
+    @Test
+    @DisplayName("Проверка загрузки фото методом '/pet/{id}/uploadImage'")
+    @Tag("@method02")
+    @Tag("@method02test01")
+    public void test1() {
+        // Проверка полей №1
+        ValidatableResponse rs = petServiceApi.postUploadImage(5L, "'My metadata text'", "src/main/resources/test_files/images/testPhotoBRA.PNG");
+        rs.statusCode(200);
     }
 
     private PetDTO createNewPet(Long id) {

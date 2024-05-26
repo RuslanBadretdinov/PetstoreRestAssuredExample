@@ -26,7 +26,7 @@ public class ExampleTest {
         petRs.statusCode(200);
 
         petRs
-                .body("code", equalTo(200L))
+                .body("code", equalTo(200))
                 .body("type", equalTo("unknown"))
                 .body("message", equalTo(Long.toString(5L)));
     }
