@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.Arrays;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -28,6 +29,13 @@ public class PetTest {
     @Tag("@method01")
     @Tag("@method01test01")
     public void postPet200() {
+        /*
+            Создаём объект Pet (POST /pet/{id}),
+            Проверяем status 200
+            Проверяем валидацию по JSON схеме
+        */
+
+        //Создание объекта Pet
         PetDTO rqPetDTO = createNewPet(2L);
         ValidatableResponse rs = petServiceApi.postPet(rqPetDTO);
         rs.statusCode(200)
@@ -40,9 +48,17 @@ public class PetTest {
     @Tag("@method01")
     @Tag("@method01test02")
     public void postPetCompareRqBodyAndRsBody() {
+        /*
+            Создаём объект Pet (POST /pet/{id}),
+            Проверяем status 200
+            Сверяем объект из запроса с объектом из ответа (equals - у PetDTO.class переопределён)
+        */
+
+        //Создание объекта Pet
         PetDTO rqPetDTO = createNewPet(2L);
         ValidatableResponse rs = petServiceApi.postPet(rqPetDTO);
         rs.statusCode(200);
+        //Переопределил метод equals у объекта
         PetDTO rpPetDTO = rs.extract().body().as(PetDTO.class);
         assertTrue(rqPetDTO.equals(rpPetDTO), "rqPetDTO is not equal to rpPetDTO");
     }
@@ -52,23 +68,34 @@ public class PetTest {
     @Tag("@method01")
     @Tag("@method01test03")
     public void postGetDeletePetCompareRqBodyAndRsBody() {
+        /*
+            Step 1 - POST+GET - сравнение DTO объекта rqPostPetDTO с rpGetPetDTO
+            Step 1.1 - проверяем Pet методом Get
+            Step 2 - PUT+GET - сравнение DTO объекта rqPutPetDTO с rpGetPetDTO + проверка того, что сгенерировался отличный объект от POST запроса
+            Step 2.1 - проверяем Pet методом Get
+            Step 3 - DELETE+GET - проверка удаления DTO
+            Step 3.1 - проверяем Pet методом Get
+        */
+
         long id = 2L;
         // Step 1 - POST+GET - сравнение DTO объекта rqPostPetDTO с rpGetPetDTO
         PetDTO rqPostPetDTO = createNewPet(id);
         ValidatableResponse rsPost = petServiceApi.postPet(rqPostPetDTO);
         rsPost.statusCode(200);
 
+        // Step 1.1 - проверяем Pet методом Get
         ValidatableResponse rsGet = petServiceApi.getPet(id);
         rsGet.statusCode(200);
         PetDTO rpGetPetDTO = rsGet.extract().body().as(PetDTO.class);
         comparePetDTO(rpGetPetDTO, rqPostPetDTO, "rpGetPetDTO01", "rqPostPetDTO");
 
-        // Step 1 - PUT+GET - сравнение DTO объекта rqPutPetDTO с rpGetPetDTO + проверка того, что сгенерировался отличный объект от POST запроса
+        // Step 2 - PUT+GET - сравнение DTO объекта rqPutPetDTO с rpGetPetDTO + проверка того, что сгенерировался отличный объект от POST запроса
         PetDTO rqPutPetDTO = createNewPet(id);
         assertFalse(rqPutPetDTO.equals(rqPostPetDTO), "rqPostPetDTO is equal to rqPutPetDTO. Need different DTO");
         ValidatableResponse rsPut = petServiceApi.putPet(rqPutPetDTO);
         rsPut.statusCode(200);
 
+        // Step 2.1 - проверяем Pet методом Get
         rsGet = petServiceApi.getPet(id);
         rsGet.statusCode(200);
         rpGetPetDTO = rsGet.extract().body().as(PetDTO.class);
@@ -85,6 +112,7 @@ public class PetTest {
                 () -> assertEquals(Long.toString(id), rpDeleteBody.getMessage())
         );
 
+        // Step 3.1 - проверяем Pet методом Get
         rsGet = petServiceApi.getPet(id);
         rsGet.statusCode(404)
                 .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
@@ -98,13 +126,145 @@ public class PetTest {
     }
 
     @Test
-    @DisplayName("Проверка загрузки фото методом '/pet/{id}/uploadImage'")
+    @DisplayName("Проверка загрузки изображения методом '/pet/{id}/uploadImage' c 'additionalMetadata'")
     @Tag("@method02")
     @Tag("@method02test01")
-    public void test1() {
-        // Проверка полей №1
-        ValidatableResponse rs = petServiceApi.postUploadImage(5L, "'My metadata text'", "src/main/resources/test_files/images/testPhotoBRA.PNG");
-        rs.statusCode(200);
+    public void postUploadImage() {
+        /*
+            Создаём объект Pet (POST /pet/{id}),
+            Отправляем изображение (POST /pet/{id}/uploadImage),
+            Проверяем ответ от (POST /pet/{id}/uploadImage)
+        */
+        long id = 2L;
+        String metaData = "MyMetaData";
+        File file = new File("src/main/resources/test_files/images/testPhotoBRA.PNG");
+        String fileName = "/testPhotoBRA.PNG";
+
+        petServiceApi.postPet(createNewPet(id)).statusCode(200);
+
+        ValidatableResponse rs = petServiceApi.postUploadImage(id, metaData, file);
+
+        rs.statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
+
+        RPCodeTypeMessageDTO rPCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
+        Assertions.assertAll("rsCodeTypeMessageDTO",
+                () -> Assertions.assertEquals(200L, rPCodeTypeMessageDTO.getCode()),
+                () -> Assertions.assertEquals("unknown", rPCodeTypeMessageDTO.getType()),
+                () -> Assertions.assertEquals(
+                        String.format("additionalMetadata: %s\nFile uploaded to .%s, %s bytes", metaData, fileName, file.length()),
+                        rPCodeTypeMessageDTO.getMessage()
+                )
+        );
+    }
+
+    @Test
+    @DisplayName("Проверка загрузки изображения методом '/pet/{id}/uploadImage' без 'additionalMetadata'")
+    @Tag("@method02")
+    @Tag("@method02test02")
+    public void postUploadImageNoAdditionalMetadata() {
+        // Проверка необязательности поля 'additionalMetadata'
+
+        /*
+            Создаём объект Pet (POST /pet/{id}),
+            Отправляем изображение (POST /pet/{id}/uploadImage) через перегруженный метод без поля 'additionalMetadata',
+            Проверяем ответ от (POST /pet/{id}/uploadImage)
+        */
+
+        long id = 2L;
+        File file = new File("src/main/resources/test_files/images/testPhotoBRA.PNG");
+        String fileName = "/testPhotoBRA.PNG";
+
+        petServiceApi.postPet(createNewPet(id)).statusCode(200);
+
+        ValidatableResponse rs = petServiceApi.postUploadImage(id, file);
+
+        rs.statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
+
+        RPCodeTypeMessageDTO rPCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
+        Assertions.assertAll("rsCodeTypeMessageDTO",
+                () -> Assertions.assertEquals(200L, rPCodeTypeMessageDTO.getCode()),
+                () -> Assertions.assertEquals("unknown", rPCodeTypeMessageDTO.getType()),
+                () -> Assertions.assertEquals(
+                        String.format("additionalMetadata: null\nFile uploaded to .%s, %s bytes", fileName, file.length()),
+                        rPCodeTypeMessageDTO.getMessage()
+                )
+        );
+    }
+
+    @Test
+    @DisplayName("200 при отправке текстового файла вместо файла с изображением в методе '/pet/{id}/uploadImage'")
+    @Tag("@method02")
+    @Tag("@method02test03")
+    public void postUploadImageButThisIsText() {
+        // Проверка необязательности поля 'additionalMetadata'
+
+        /*
+            Создаём объект Pet (POST /pet/{id}),
+            Отправляем текстовый файл вместо изображения (POST /pet/{id}/uploadImage),
+            Проверяем ответ от (POST /pet/{id}/uploadImage)
+        */
+
+        long id = 2L;
+        String metaData = "MyMetaData";
+        File file = new File("src/main/resources/test_files/texts/test_chat.txt");
+        String fileName = "/test_chat.txt";
+
+        petServiceApi.postPet(createNewPet(id)).statusCode(200);
+
+        ValidatableResponse rs = petServiceApi.postUploadImage(id, metaData, file);
+
+        rs.statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
+
+        RPCodeTypeMessageDTO rPCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
+        Assertions.assertAll("rsCodeTypeMessageDTO",
+                () -> Assertions.assertEquals(200L, rPCodeTypeMessageDTO.getCode()),
+                () -> Assertions.assertEquals("unknown", rPCodeTypeMessageDTO.getType()),
+                () -> Assertions.assertEquals(
+                        String.format("additionalMetadata: %s\nFile uploaded to .%s, %s bytes", metaData, fileName, file.length()),
+                        rPCodeTypeMessageDTO.getMessage()
+                )
+        );
+    }
+
+    @Test
+    @DisplayName("200 при отправке текстового файла на удалённый Pet в методе '/pet/{id}/uploadImage'")
+    @Tag("@method02")
+    @Tag("@method02test04")
+    public void postUploadImageButPetWasDeleted() {
+        // Проверка необязательности поля 'additionalMetadata'
+
+        /*
+            Создаём объект Pet (POST /pet/{id}),
+            Удаляем объект Pet (DELETE /pet/{id})
+            Отправляем изображение (POST /pet/{id}/uploadImage),
+            Проверяем ответ от (POST /pet/{id}/uploadImage)
+        */
+
+        long id = 2L;
+        String metaData = "MyMetaData";
+        File file = new File("src/main/resources/test_files/images/testPhotoBRA.PNG");
+        String fileName = "/testPhotoBRA.PNG";
+
+        petServiceApi.postPet(createNewPet(id)).statusCode(200);
+        petServiceApi.deletePet(id).statusCode(200);
+
+        ValidatableResponse rs = petServiceApi.postUploadImage(id, metaData, file);
+
+        rs.statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
+
+        RPCodeTypeMessageDTO rPCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
+        Assertions.assertAll("rsCodeTypeMessageDTO",
+                () -> Assertions.assertEquals(200L, rPCodeTypeMessageDTO.getCode()),
+                () -> Assertions.assertEquals("unknown", rPCodeTypeMessageDTO.getType()),
+                () -> Assertions.assertEquals(
+                        String.format("additionalMetadata: %s\nFile uploaded to .%s, %s bytes", metaData, fileName, file.length()),
+                        rPCodeTypeMessageDTO.getMessage()
+                )
+        );
     }
 
     private PetDTO createNewPet(Long id) {

@@ -1,0 +1,16 @@
+20:00:05	 From Elena : добрый вечер
+20:00:48	 From Elena : +
+20:01:53	 From Софьюшка Ефимова : 0
+20:01:53	 From Андрей Кролевецкий : 1
+20:05:16	 From Online Education : https://petstore.swagger.io/
+20:10:25	 From Григорий : 1
+20:10:25	 From Софьюшка Ефимова : 0
+20:10:26	 From Руслан Бадретдинов : 01
+20:17:20	 From Elena : data
+20:43:30	 From Online Education : https://www.javadoc.io/doc/io.rest-assured/json-path/3.0.0/io/restassured/path/json/JsonPath.html
+21:18:47	 From Online Education : https://www.liquid-technologies.com/online-json-to-schema-converter
+21:22:54	 From Online Education : https://matteobaccan.github.io/owner/
+21:26:01	 From Андрей Кролевецкий : <groupId>org.aeonbits.owner</groupId><artifactId>owner</artifactId><version>1.0.11</version>
+21:26:12	 From Руслан Бадретдинов : Reacted to "<groupId>org.aeonbit..." with 👍
+21:26:44	 From Online Education : https://otus.ru/polls/86022/
+21:36:54	 From Elena : спасибо
