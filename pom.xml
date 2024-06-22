@@ -124,6 +124,7 @@
                     <reuseForks>${reuseForks}</reuseForks>
 
                     <systemPropertyVariables>
+                        <project.base.dir>${project.basedir}</project.base.dir>
                         <base.api.url>${base.api.url}</base.api.url>
                     </systemPropertyVariables>
 

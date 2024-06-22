@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 
 @ExtendWith(PetExtension.class)
@@ -103,7 +105,7 @@ public class PetTest {
         */
         long id = 22L;
         String metaData = "MyMetaData";
-        File file = new File("src/main/resources/test_files/images/testPhotoBRA.PNG");
+        File file = new File("src/main/resources/test.data/images/testPhotoBRA.PNG");
         String fileName = "/testPhotoBRA.PNG";
 
         petServiceApi.postPet(createNewPet(id)).statusCode(200);
@@ -138,7 +140,7 @@ public class PetTest {
         */
 
         long id = 23L;
-        File file = new File("src/main/resources/test_files/images/testPhotoBRA.PNG");
+        File file = new File("src/main/resources/test.data/images/testPhotoBRA.PNG");
         String fileName = "/testPhotoBRA.PNG";
 
         petServiceApi.postPet(createNewPet(id)).statusCode(200);
@@ -163,7 +165,7 @@ public class PetTest {
     @DisplayName("200 при отправке текстового файла вместо файла с изображением в методе '/pet/{id}/uploadImage'")
     @Tag("@method02")
     @Tag("@method02test03")
-    public void postUploadImageButThisIsText() {
+    public void postUploadImageButThisIsText() throws IOException{
         // Проверка необязательности поля 'additionalMetadata'
 
         /*
@@ -174,8 +176,8 @@ public class PetTest {
 
         long id = 24L;
         String metaData = "MyMetaData";
-        File file = new File("src/main/resources/test_files/texts/test_chat.txt");
-        String fileName = "/test_chat.txt";
+        String fileName = "/testFileMethod02test03.txt";
+        File file = getTestTextFile(fileName);
 
         petServiceApi.postPet(createNewPet(id)).statusCode(200);
 
@@ -193,6 +195,7 @@ public class PetTest {
                         rpCodeTypeMessageDTO.getMessage()
                 )
         );
+        Assertions.assertTrue(file.delete(), String.format("Файл '%s' не удалён", file.getAbsolutePath()));
     }
 
     @Test
@@ -211,7 +214,7 @@ public class PetTest {
 
         long id = 25L;
         String metaData = "MyMetaData";
-        File file = new File("src/main/resources/test_files/images/testPhotoBRA.PNG");
+        File file = new File("src/main/resources/test.data/images/testPhotoBRA.PNG");
         String fileName = "/testPhotoBRA.PNG";
 
         petServiceApi.postPet(createNewPet(id)).statusCode(200);
@@ -251,5 +254,14 @@ public class PetTest {
         assertThat(petDTO1)
                 .as(String.format("DTO '%s' is not equals DTO '%s'", petDTO1Name, petDTO2Name))
                 .isEqualTo(petDTO2);
+    }
+
+    private File getTestTextFile(String fileNameAndExtension) throws IOException{
+        File file = new File(System.getProperty("project.base.dir") + "\\target" + fileNameAndExtension);
+        try(FileWriter writer = new FileWriter(file, false)) {
+            writer.write(faker.country().name());
+            writer.flush();
+        }
+        return file;
     }
 }
