@@ -1,5 +1,5 @@
 
-package io.petstore.dto.inner_parts;
+package io.petstore.dto.inner.parts;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

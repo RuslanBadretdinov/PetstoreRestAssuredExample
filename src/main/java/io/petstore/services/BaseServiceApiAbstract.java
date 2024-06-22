@@ -4,12 +4,12 @@ import io.petstore.specs.BaseSpec;
 import io.restassured.specification.RequestSpecification;
 
 public abstract class BaseServiceApiAbstract extends BaseSpec{
-    protected String BASE_API_URL;
-    protected String BASE_PATH;
+    protected String baseApiUrl;
+    protected String basePath;
     private RequestSpecification requestSpec;
 
     protected BaseServiceApiAbstract() {
-        this.BASE_API_URL = System.getProperty("base.api.url");
+        this.baseApiUrl = System.getProperty("base.api.url");
     }
 
     protected void spec(String baseApiURL, String basePath) {

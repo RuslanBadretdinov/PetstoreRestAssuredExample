@@ -1,5 +1,9 @@
 package io.petstore.extensions;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.is;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.petstore.dto.pet.PetDTO;
@@ -10,12 +14,7 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-
 import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.is;
 
 public class PetExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback {
 

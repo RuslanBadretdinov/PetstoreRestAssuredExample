@@ -1,9 +1,13 @@
 package io.petstore.pet;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.github.javafaker.Faker;
 import com.google.inject.Inject;
-import io.petstore.dto.inner_parts.Category;
-import io.petstore.dto.inner_parts.TagDTO;
+import io.petstore.dto.inner.parts.Category;
+import io.petstore.dto.inner.parts.TagDTO;
 import io.petstore.dto.pet.PetDTO;
 import io.petstore.dto.rp.RPCodeTypeMessageDTO;
 import io.petstore.extensions.PetExtension;
@@ -14,13 +18,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import java.io.File;
 import java.util.Arrays;
-
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(PetExtension.class)
 @Tag("@homework3")
@@ -114,13 +113,13 @@ public class PetTest {
         rs.statusCode(200)
                 .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
 
-        RPCodeTypeMessageDTO rPCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
+        RPCodeTypeMessageDTO rpCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
         Assertions.assertAll("rsCodeTypeMessageDTO",
-                () -> Assertions.assertEquals(200L, rPCodeTypeMessageDTO.getCode()),
-                () -> Assertions.assertEquals("unknown", rPCodeTypeMessageDTO.getType()),
+                () -> Assertions.assertEquals(200L, rpCodeTypeMessageDTO.getCode()),
+                () -> Assertions.assertEquals("unknown", rpCodeTypeMessageDTO.getType()),
                 () -> Assertions.assertEquals(
                         String.format("additionalMetadata: %s\nFile uploaded to .%s, %s bytes", metaData, fileName, file.length()),
-                        rPCodeTypeMessageDTO.getMessage()
+                        rpCodeTypeMessageDTO.getMessage()
                 )
         );
     }
@@ -149,13 +148,13 @@ public class PetTest {
         rs.statusCode(200)
                 .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
 
-        RPCodeTypeMessageDTO rPCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
+        RPCodeTypeMessageDTO rpCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
         Assertions.assertAll("rsCodeTypeMessageDTO",
-                () -> Assertions.assertEquals(200L, rPCodeTypeMessageDTO.getCode()),
-                () -> Assertions.assertEquals("unknown", rPCodeTypeMessageDTO.getType()),
+                () -> Assertions.assertEquals(200L, rpCodeTypeMessageDTO.getCode()),
+                () -> Assertions.assertEquals("unknown", rpCodeTypeMessageDTO.getType()),
                 () -> Assertions.assertEquals(
                         String.format("additionalMetadata: null\nFile uploaded to .%s, %s bytes", fileName, file.length()),
-                        rPCodeTypeMessageDTO.getMessage()
+                        rpCodeTypeMessageDTO.getMessage()
                 )
         );
     }
@@ -185,13 +184,13 @@ public class PetTest {
         rs.statusCode(200)
                 .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
 
-        RPCodeTypeMessageDTO rPCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
+        RPCodeTypeMessageDTO rpCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
         Assertions.assertAll("rsCodeTypeMessageDTO",
-                () -> Assertions.assertEquals(200L, rPCodeTypeMessageDTO.getCode()),
-                () -> Assertions.assertEquals("unknown", rPCodeTypeMessageDTO.getType()),
+                () -> Assertions.assertEquals(200L, rpCodeTypeMessageDTO.getCode()),
+                () -> Assertions.assertEquals("unknown", rpCodeTypeMessageDTO.getType()),
                 () -> Assertions.assertEquals(
                         String.format("additionalMetadata: %s\nFile uploaded to .%s, %s bytes", metaData, fileName, file.length()),
-                        rPCodeTypeMessageDTO.getMessage()
+                        rpCodeTypeMessageDTO.getMessage()
                 )
         );
     }
@@ -223,13 +222,13 @@ public class PetTest {
         rs.statusCode(200)
                 .body(matchesJsonSchemaInClasspath("schema/rs/RSCodeTypeMessageSchema.json"));
 
-        RPCodeTypeMessageDTO rPCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
+        RPCodeTypeMessageDTO rpCodeTypeMessageDTO = rs.extract().body().as(RPCodeTypeMessageDTO.class);
         Assertions.assertAll("rsCodeTypeMessageDTO",
-                () -> Assertions.assertEquals(200L, rPCodeTypeMessageDTO.getCode()),
-                () -> Assertions.assertEquals("unknown", rPCodeTypeMessageDTO.getType()),
+                () -> Assertions.assertEquals(200L, rpCodeTypeMessageDTO.getCode()),
+                () -> Assertions.assertEquals("unknown", rpCodeTypeMessageDTO.getType()),
                 () -> Assertions.assertEquals(
                         String.format("additionalMetadata: %s\nFile uploaded to .%s, %s bytes", metaData, fileName, file.length()),
-                        rPCodeTypeMessageDTO.getMessage()
+                        rpCodeTypeMessageDTO.getMessage()
                 )
         );
     }

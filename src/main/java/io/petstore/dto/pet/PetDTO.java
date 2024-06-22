@@ -2,10 +2,9 @@
 package io.petstore.dto.pet;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.petstore.dto.inner_parts.Category;
-import io.petstore.dto.inner_parts.TagDTO;
+import io.petstore.dto.inner.parts.Category;
+import io.petstore.dto.inner.parts.TagDTO;
 import lombok.*;
-
 import java.util.List;
 
 @Data
