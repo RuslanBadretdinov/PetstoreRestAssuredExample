@@ -57,7 +57,11 @@ public class PetTest {
         //Создание объекта Pet
         PetDTO rqPetDTO = createNewPet(2L);
         ValidatableResponse rs = petServiceApi.postPet(rqPetDTO);
-        rs.statusCode(200);
+
+        //Статус 200 + Валидация по JSON схеме
+        rs.statusCode(200)// Добавил enum в json схему для проверки допустимых значений
+                .body(matchesJsonSchemaInClasspath("schema/rs/PetDTOSchema.json"));
+
         //Переопределил метод equals у объекта
         PetDTO rpPetDTO = rs.extract().body().as(PetDTO.class);
         assertTrue(rqPetDTO.equals(rpPetDTO), "rqPetDTO is not equal to rpPetDTO");
