@@ -20,7 +20,6 @@ public class PetServiceApi extends BaseServiceApiAbstract {
     public ValidatableResponse getPet(long id) {
         return given()
                 .basePath(this.BASE_PATH + "/" + id)
-                .log().all()
                 .when()
                 .get()
                 .then()
@@ -30,7 +29,6 @@ public class PetServiceApi extends BaseServiceApiAbstract {
     public ValidatableResponse postPet(PetDTO petDTO) {
         return given()
                 .body(petDTO)
-                .log().all()
                 .when()
                 .post()
                 .then()
@@ -40,7 +38,6 @@ public class PetServiceApi extends BaseServiceApiAbstract {
     public ValidatableResponse putPet(PetDTO petDTO) {
         return given()
                 .body(petDTO)
-                .log().all()
                 .when()
                 .put()
                 .then()
@@ -55,7 +52,6 @@ public class PetServiceApi extends BaseServiceApiAbstract {
                 .formParam("status", status)
                 .header("Accept-Charset", "UTF-8")
                 .header("Accept-Encoding", "gzip, deflate, br")
-                .log().all()
                 .when()
                 .post()
                 .then()
@@ -65,7 +61,6 @@ public class PetServiceApi extends BaseServiceApiAbstract {
     public ValidatableResponse deletePet(long id) {
         return given()
                 .basePath(this.BASE_PATH + "/" + id)
-                .log().all()
                 .when()
                 .delete()
                 .then()
@@ -78,7 +73,6 @@ public class PetServiceApi extends BaseServiceApiAbstract {
                 .contentType(ContentType.MULTIPART)
                 .formParam("additionalMetadata", additionalMetadata)
                 .multiPart(file)
-                .log().all()
                 .when()
                 .post()
                 .then()
@@ -90,7 +84,6 @@ public class PetServiceApi extends BaseServiceApiAbstract {
                 .basePath(this.BASE_PATH + "/" + id + "/uploadImage")
                 .contentType(ContentType.MULTIPART)
                 .multiPart(file)
-                .log().all()
                 .when()
                 .post()
                 .then()

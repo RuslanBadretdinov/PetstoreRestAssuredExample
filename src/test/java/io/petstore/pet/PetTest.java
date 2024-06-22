@@ -1,16 +1,19 @@
 package io.petstore.pet;
 
 import com.github.javafaker.Faker;
+import com.google.inject.Inject;
 import io.petstore.dto.inner_parts.Category;
 import io.petstore.dto.inner_parts.TagDTO;
 import io.petstore.dto.pet.PetDTO;
 import io.petstore.dto.rp.RPCodeTypeMessageDTO;
+import io.petstore.extensions.PetExtension;
 import io.petstore.services.pet.PetServiceApi;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.File;
 import java.util.Arrays;
@@ -19,39 +22,18 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(PetExtension.class)
 @Tag("@homework3")
 public class PetTest {
-    private Faker faker = new Faker();
-    private PetServiceApi petServiceApi = new PetServiceApi();
-
-    @Test
-    @DisplayName("Проверка полей body запроса и ответа у POST + '/pet' + body with DTO json/application")
-    @Tag("@method01")
-    @Tag("@method01test01")
-    public void postPetCompareRqBodyAndRsBody() {
-        /*
-            Создаём объект Pet (POST /pet + 'body'),
-            Проверяем status 200
-            Сверяем объект из запроса с объектом из ответа (equals - у PetDTO.class переопределён)
-        */
-
-        //Создание объекта Pet
-        PetDTO rqPetDTO = createNewPet(2L);
-        ValidatableResponse rs = petServiceApi.postPet(rqPetDTO);
-
-        //Статус 200 + Валидация по JSON схеме
-        rs.statusCode(200)// Добавил enum в json схему для проверки допустимых значений
-                .body(matchesJsonSchemaInClasspath("schema/rs/PetDTOSchema.json"));
-
-        //Переопределил метод equals у объекта
-        PetDTO rpPetDTO = rs.extract().body().as(PetDTO.class);
-        assertTrue(rqPetDTO.equals(rpPetDTO), "rqPetDTO is not equal to rpPetDTO");
-    }
+    @Inject
+    private Faker faker;
+    @Inject
+    private PetServiceApi petServiceApi;
 
     @Test
     @DisplayName("Проверка запросов POST, PUT, GET, DELETE + '/pet' и их body")
     @Tag("@method01")
-    @Tag("@method01test02")
+    @Tag("@method01test01")
     public void postGetDeletePetCompareRqBodyAndRsBody() {
         /*
             Step 1 - POST+GET - сравнение DTO объекта rqPostPetDTO с rpGetPetDTO
@@ -62,7 +44,7 @@ public class PetTest {
             Step 3.1 - проверяем Pet методом Get
         */
 
-        long id = 2L;
+        long id = 21L;
         // Step 1 - POST+GET - сравнение DTO объекта rqPostPetDTO с rpGetPetDTO
         PetDTO rqPostPetDTO = createNewPet(id);
         ValidatableResponse rsPost = petServiceApi.postPet(rqPostPetDTO);
@@ -120,7 +102,7 @@ public class PetTest {
             Отправляем изображение (POST /pet/{id}/uploadImage),
             Проверяем ответ от (POST /pet/{id}/uploadImage)
         */
-        long id = 2L;
+        long id = 22L;
         String metaData = "MyMetaData";
         File file = new File("src/main/resources/test_files/images/testPhotoBRA.PNG");
         String fileName = "/testPhotoBRA.PNG";
@@ -156,7 +138,7 @@ public class PetTest {
             Проверяем ответ от (POST /pet/{id}/uploadImage)
         */
 
-        long id = 2L;
+        long id = 23L;
         File file = new File("src/main/resources/test_files/images/testPhotoBRA.PNG");
         String fileName = "/testPhotoBRA.PNG";
 
@@ -191,7 +173,7 @@ public class PetTest {
             Проверяем ответ от (POST /pet/{id}/uploadImage)
         */
 
-        long id = 2L;
+        long id = 24L;
         String metaData = "MyMetaData";
         File file = new File("src/main/resources/test_files/texts/test_chat.txt");
         String fileName = "/test_chat.txt";
@@ -228,7 +210,7 @@ public class PetTest {
             Проверяем ответ от (POST /pet/{id}/uploadImage)
         */
 
-        long id = 2L;
+        long id = 25L;
         String metaData = "MyMetaData";
         File file = new File("src/main/resources/test_files/images/testPhotoBRA.PNG");
         String fileName = "/testPhotoBRA.PNG";

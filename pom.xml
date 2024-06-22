@@ -20,12 +20,14 @@
 
         <!-- Dependencies Version -->
         <junit.jupiter.api.version>5.10.2</junit.jupiter.api.version>
+        <junit.platform.suite.engine.version>1.10.2</junit.platform.suite.engine.version>
         <assertj.core.version>3.25.3</assertj.core.version>
         <javafaker.version>1.0.2</javafaker.version>
         <lombok.version>1.18.32</lombok.version>
         <rest.assured.version>5.4.0</rest.assured.version>
         <json.schema.validator.version>5.4.0</json.schema.validator.version>
         <jackson.mapper.asl>1.9.13</jackson.mapper.asl>
+        <guice.version>7.0.0</guice.version>
 
         <!-- Plugins Version -->
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
@@ -43,7 +45,11 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.jupiter.api.version}</version>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>${junit.platform.suite.engine.version}</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
@@ -75,6 +81,11 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>${jackson.mapper.asl}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
         </dependency>
     </dependencies>
 
