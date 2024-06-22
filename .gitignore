@@ -5,6 +5,3 @@ target
 
 # File ignoring
 *.iml
-*.war
-*.jar
-*.log
