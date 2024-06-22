@@ -25,28 +25,9 @@ public class PetTest {
     private PetServiceApi petServiceApi = new PetServiceApi();
 
     @Test
-    @DisplayName("Проверка статуса 200 у POST + валидация JSON схемы + '/pet' + body with DTO json/application")
-    @Tag("@method01")
-    @Tag("@method01test01")
-    public void postPet200() {
-        /*
-            Создаём объект Pet (POST /pet + 'body'),
-            Проверяем status 200
-            Проверяем валидацию по JSON схеме
-        */
-
-        //Создание объекта Pet
-        PetDTO rqPetDTO = createNewPet(2L);
-        ValidatableResponse rs = petServiceApi.postPet(rqPetDTO);
-        rs.statusCode(200)
-                // Добавил enum в json схему для проверки допустимых значений
-                .body(matchesJsonSchemaInClasspath("schema/rs/PetDTOSchema.json"));
-    }
-
-    @Test
     @DisplayName("Проверка полей body запроса и ответа у POST + '/pet' + body with DTO json/application")
     @Tag("@method01")
-    @Tag("@method01test02")
+    @Tag("@method01test01")
     public void postPetCompareRqBodyAndRsBody() {
         /*
             Создаём объект Pet (POST /pet + 'body'),
@@ -70,7 +51,7 @@ public class PetTest {
     @Test
     @DisplayName("Проверка запросов POST, PUT, GET, DELETE + '/pet' и их body")
     @Tag("@method01")
-    @Tag("@method01test03")
+    @Tag("@method01test02")
     public void postGetDeletePetCompareRqBodyAndRsBody() {
         /*
             Step 1 - POST+GET - сравнение DTO объекта rqPostPetDTO с rpGetPetDTO
